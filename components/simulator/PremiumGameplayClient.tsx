@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect } from 'react'
-import { BookOpen, Car, ChartNoAxesColumnIncreasing, Flower2, Pause, RotateCcw, Settings, Star, Hand, Flag } from 'lucide-react'
+import { BookOpen, Car, ChartNoAxesColumnIncreasing, Flower2, Pause, RotateCcw, Settings, Star, Hand } from 'lucide-react'
 import type { ParkingLevel } from '@/lib/data/levels'
 import { useSimulatorStore } from '@/store/simulatorStore'
 import { FinishAttemptButton } from '@/components/simulator/FinishAttemptButton'
 import { playSound } from '@/lib/sound/soundEngine'
-import { PremiumLayeredCanvas } from '@/components/simulator/PremiumLayeredCanvas'
+import { RealParkingCanvas } from '@/components/simulator/RealParkingCanvas'
 import { InstructorPanel } from '@/components/simulator/InstructorPanel'
 import type { CarInput } from '@/lib/physics/types'
 
@@ -91,8 +91,8 @@ export function PremiumGameplayClient({ level }: { level: ParkingLevel }) {
           </div>
         </div>
 
-        <section className="relative mt-6 h-[900px] overflow-hidden rounded-[2rem] border border-white/10 bg-[#070a12] shadow-card md:h-[940px]">
-          <PremiumLayeredCanvas level={level} />
+        <section className="relative mt-6 h-[58vh] min-h-[440px] overflow-hidden rounded-[2rem] border border-white/10 bg-[#070a12] shadow-card md:h-[68vh] md:min-h-[560px]">
+          <RealParkingCanvas level={level} />
           <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#080B13]/35 to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#080B13]/50 to-transparent" />
           <div className="v11-glass absolute left-5 top-8 max-w-[270px] rounded-[1.5rem] p-5">
@@ -106,7 +106,7 @@ export function PremiumGameplayClient({ level }: { level: ParkingLevel }) {
           </div>
         </section>
 
-        <section className="v11-glass -mt-20 relative z-20 rounded-[2rem] p-4 md:p-5">
+        <section className="v11-glass relative z-20 mt-5 rounded-[2rem] p-4 md:p-5">
           <div className="grid grid-cols-[82px_1fr] gap-4 md:grid-cols-[100px_1fr_1.25fr]">
             <div className="rounded-[1.35rem] border border-white/10 bg-[#090d18]/80 p-2">
               <button
