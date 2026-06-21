@@ -157,7 +157,6 @@ button {
   background: rgba(255,255,255,.10);
   box-shadow: 0 0 42px rgba(255,117,183,.28);
   font-size: 42px;
-  color: #FF75B7;
   animation: floatIcon 3s infinite ease-in-out;
 }
 

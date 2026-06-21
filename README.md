@@ -1,17 +1,26 @@
-# 100 комплиментов для Вики
+# 100 комплиментов для Вики — clean final
 
-Финальная версия без Tailwind и PostCSS.
+Это чистая версия проекта.
 
-## Важно
+В проекте должны остаться только:
 
-В репозитории НЕ должно быть файлов:
+- `app/`
+- `package.json`
+- `next.config.js`
+- `vercel.json`
+- `tsconfig.json`
+- `next-env.d.ts`
+- `.gitignore`
+- `README.md`
 
+Нужно удалить старые папки:
+
+- `components/`
+- `lib/`
+- `store/`
+- `public/assets/`
 - `postcss.config.js`
-- `postcss.config.mjs`
 - `tailwind.config.ts`
-- `tailwind.config.js`
-
-Иначе Vercel будет искать `tailwindcss` и сборка упадёт.
 
 ## Запуск
 
@@ -25,10 +34,3 @@ npm run dev
 ```bash
 npm run build
 ```
-
-## Vercel
-
-- Framework Preset: Next.js
-- Install Command: npm install
-- Build Command: npm run build
-- Output Directory: .next
