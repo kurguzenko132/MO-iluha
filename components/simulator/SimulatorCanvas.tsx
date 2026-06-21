@@ -5,6 +5,8 @@ import { updateCarPhysics, predictTrajectory } from '@/lib/physics/carPhysics'
 import { getCarCorners, getRectCorners } from '@/lib/physics/geometry'
 import { detectCollision, getSoftHint, isParked } from '@/lib/simulator/scoring'
 import { useSettingsStore } from '@/store/settingsStore'
+import { buildAttemptResult } from '@/lib/simulator/result'
+import { saveAttempt } from '@/lib/progress/storage'
 import { useSimulatorStore } from '@/store/simulatorStore'
 import type { ParkingLevel } from '@/lib/data/levels'
 import type { CarInput, Point } from '@/lib/physics/types'
@@ -53,12 +55,14 @@ function drawPath(ctx: CanvasRenderingContext2D, pts: Point[], w: number, h: num
 export function SimulatorCanvas({ level }: { level: ParkingLevel }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const [finished, setFinished] = useState(false)
+  const savedRef = useRef(false)
   const { setCar, setInput, resetCar, setHint, addCollision } = useSimulatorStore()
   const settings = useSettingsStore()
 
   useEffect(() => {
     resetCar(level.start)
     setFinished(false)
+    savedRef.current = false
   }, [level.id, resetCar, level.start])
 
   useEffect(() => {
@@ -114,9 +118,24 @@ export function SimulatorCanvas({ level }: { level: ParkingLevel }) {
         collisionCooldown -= dt
         setCar(hit ? { ...next, speed: 0 } : next)
 
-        if (isParked(next, state.config, level.target)) {
+        if (isParked(next, state.config, level.target) && !savedRef.current) {
+          savedRef.current = true
+          const result = buildAttemptResult({
+            level,
+            car: next,
+            config: state.config,
+            collisions: state.collisions,
+            maneuvers: state.maneuvers,
+            startedAt: state.startedAt,
+            maxSpeed: state.maxSpeed,
+            completed: true
+          })
+          saveAttempt(result)
           setFinished(true)
           setHint('Красиво получилось. Машина встала в зоне.')
+          setTimeout(() => {
+            window.location.href = `/results/${result.id}`
+          }, 900)
         }
       }
 

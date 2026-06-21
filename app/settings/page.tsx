@@ -2,6 +2,7 @@
 import { AppShell } from '@/components/shared/AppShell'
 import { Card } from '@/components/shared/Card'
 import { useSettingsStore } from '@/store/settingsStore'
+import { SettingsActions } from '@/components/settings/SettingsActions'
 
 function Toggle({ label, description, value, onChange }: { label: string; description: string; value: boolean; onChange: (v: boolean) => void }) {
   return (
@@ -29,6 +30,7 @@ export default function SettingsPage() {
           <Toggle label="Машина-призрак" description="Показывает будущие положения машины." value={settings.ghost} onChange={v => settings.set('ghost', v)} />
           <Toggle label="Габаритный коридор" description="Показывает место, которое займёт весь корпус." value={settings.corridor} onChange={v => settings.set('corridor', v)} />
         </div>
+      <SettingsActions />
       </Card>
     </AppShell>
   )

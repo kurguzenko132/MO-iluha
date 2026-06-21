@@ -3,6 +3,7 @@ import { Card } from '@/components/shared/Card'
 import { getLevel, levels } from '@/lib/data/levels'
 import { SimulatorCanvas, TouchControls } from '@/components/simulator/SimulatorCanvas'
 import { SimulatorHud } from '@/components/simulator/SimulatorHud'
+import { FinishAttemptButton } from '@/components/simulator/FinishAttemptButton'
 
 type SimulatorPageProps = {
   params: Promise<{
@@ -54,6 +55,11 @@ export default async function SimulatorPage({ params }: SimulatorPageProps) {
                 <p><span className="text-mint">Зелёная</span> — идеальная учебная траектория.</p>
                 <p>Прозрачные машины — будущие положения корпуса.</p>
               </div>
+            </Card>
+
+            <Card className="p-4">
+              <FinishAttemptButton level={level} />
+              <p className="mt-3 text-xs leading-5 text-soft">Когда Вика остановилась и хочет понять результат — можно завершить попытку вручную.</p>
             </Card>
           </div>
         </div>

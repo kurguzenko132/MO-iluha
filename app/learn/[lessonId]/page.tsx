@@ -1,5 +1,6 @@
 import { AppShell } from '@/components/shared/AppShell'
 import { Button } from '@/components/shared/Button'
+import { CompleteLessonButton } from '@/components/learn/CompleteLessonButton'
 import { Card } from '@/components/shared/Card'
 import { getLesson, lessons } from '@/lib/data/lessons'
 import { CheckCircle2 } from 'lucide-react'
@@ -61,7 +62,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               <h3 className="font-semibold">Закрепить на практике</h3>
               <p className="mt-3 text-sm leading-6 text-soft">После этого урока лучше сразу пройти упражнение, чтобы связать теорию с движением машины.</p>
               <div className="mt-5">
-                <Button href={`/simulator/${lesson.practiceLevelId}`} className="w-full">Перейти к упражнению</Button>
+                <CompleteLessonButton lessonId={lesson.id} practiceLevelId={lesson.practiceLevelId} />
               </div>
             </Card>
           </div>

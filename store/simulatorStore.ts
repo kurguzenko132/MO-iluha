@@ -10,6 +10,8 @@ type SimulatorState = {
   score: number
   collisions: number
   maneuvers: number
+  maxSpeed: number
+  startedAt: number
   currentHint: string
   comfortMode: boolean
   setCar: (car: CarState) => void
@@ -31,12 +33,22 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
   score: 100,
   collisions: 0,
   maneuvers: 0,
+  maxSpeed: 0,
+  startedAt: Date.now(),
   currentHint: 'Не спеши. Смотри на синюю траекторию.',
   comfortMode: true,
-  setCar: (car) => set({ car }),
+  setCar: (car) => set((s) => ({ car, maxSpeed: Math.max(s.maxSpeed, Math.abs(car.speed)) })),
   setInput: (input) => set((s) => ({ input: { ...s.input, ...input } })),
   setGear: (gear) => set((s) => ({ car: { ...s.car, gear, speed: 0 }, maneuvers: s.maneuvers + 1 })),
-  resetCar: (car) => set({ car, score: 100, collisions: 0, maneuvers: 0, currentHint: 'Начнём спокойно. Ошибаться здесь можно.' }),
+  resetCar: (car) => set({
+    car,
+    score: 100,
+    collisions: 0,
+    maneuvers: 0,
+    maxSpeed: 0,
+    startedAt: Date.now(),
+    currentHint: 'Начнём спокойно. Ошибаться здесь можно.'
+  }),
   setHint: (currentHint) => set({ currentHint }),
   addCollision: () => set((s) => ({ collisions: s.collisions + 1, score: Math.max(0, s.score - 12) })),
   addManeuver: () => set((s) => ({ maneuvers: s.maneuvers + 1 })),
