@@ -160,7 +160,7 @@ export default function HomePage() {
         <header className="top">
           <div className="brand">
             <strong>Для Вики 💛</strong>
-            <span>100 комплиментов только для тебя</span>
+            <span>маленький подарок только для тебя</span>
           </div>
           <div className="counter">{opened.length} открыто</div>
         </header>
@@ -169,7 +169,7 @@ export default function HomePage() {
           <div className="content">
             <article key={index} className={`card ${animationClass}`}>
               <div className="icon">{icons[index % icons.length]}</div>
-              <p className="kicker">комплимент {index + 1} / {compliments.length}</p>
+              <p className="kicker">страница {index + 1} / {compliments.length}</p>
               <h1 className="text">{compliment}</h1>
             </article>
 
