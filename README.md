@@ -1,17 +1,17 @@
 # 100 комплиментов для Вики
 
-Рабочее Next.js приложение для Vercel.
+Финальная версия без Tailwind и PostCSS.
 
-## Что есть
+## Важно
 
-- 100 комплиментов.
-- Один комплимент на экране.
-- Кнопка “Дальше”.
-- Кнопка “Случайный”.
-- Кнопка “Сначала”.
-- Разные CSS-анимации.
-- Прогресс сохраняется в localStorage.
-- Без лишних зависимостей.
+В репозитории НЕ должно быть файлов:
+
+- `postcss.config.js`
+- `postcss.config.mjs`
+- `tailwind.config.ts`
+- `tailwind.config.js`
+
+Иначе Vercel будет искать `tailwindcss` и сборка упадёт.
 
 ## Запуск
 
@@ -20,15 +20,15 @@ npm install
 npm run dev
 ```
 
-## Проверка сборки
+## Сборка
 
 ```bash
 npm run build
 ```
 
-## Деплой
+## Vercel
 
-На Vercel:
 - Framework Preset: Next.js
+- Install Command: npm install
 - Build Command: npm run build
 - Output Directory: .next

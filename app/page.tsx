@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const compliments = [
   "Вика, ты самая тёплая мысль в моём дне.",
