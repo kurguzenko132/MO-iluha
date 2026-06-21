@@ -2,6 +2,7 @@ import { AppShell } from '@/components/shared/AppShell'
 import { Card } from '@/components/shared/Card'
 import { levels } from '@/lib/data/levels'
 import { Car, MapPin, Target } from 'lucide-react'
+import { CurriculumMap } from '@/components/practice/CurriculumMap'
 
 const categoryNames: Record<string, string> = {
   basic: 'Габариты и база',
@@ -30,6 +31,8 @@ export default function PracticePage() {
             Не просто “попади в прямоугольник”, а жизненные ситуации: движение назад, кривые соседние машины, узкий двор, бордюр, выезд из тесного места.
           </p>
         </Card>
+
+        <CurriculumMap />
 
         {grouped.map(([category, items]) => (
           <section key={category} className="space-y-3">
