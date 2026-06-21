@@ -1,8 +1,198 @@
 'use client'
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { ArrowRight, RotateCcw, Shuffle, Heart } from 'lucide-react'
-import { compliments } from '@/lib/compliments'
-import { ComplimentCard } from '@/components/ComplimentCard'
-import { FloatingDecor } from '@/components/FloatingDecor'
-export default function HomePage(){const [index,setIndex]=useState(0); const [visited,setVisited]=useState<number[]>([]); const compliment=compliments[index]; const progress=((index+1)/compliments.length)*100; useEffect(()=>{const saved=localStorage.getItem('vika-compliment-index'); if(saved){const parsed=Number(saved); if(!Number.isNaN(parsed)&&parsed>=0&&parsed<compliments.length)setIndex(parsed)}},[]); useEffect(()=>{localStorage.setItem('vika-compliment-index',String(index)); setVisited(items=>Array.from(new Set([...items,index])))},[index]); const next=()=>setIndex(v=>(v+1)%compliments.length); const random=()=>{let n=Math.floor(Math.random()*compliments.length); if(n===index)n=(n+1)%compliments.length; setIndex(n)}; const restart=()=>{setIndex(0);setVisited([]);localStorage.removeItem('vika-compliment-index')}; const ending=index===compliments.length-1; return <main className="bg-romantic noise relative min-h-screen overflow-hidden px-4 py-5"><div className="soft-grid pointer-events-none absolute inset-0"/><FloatingDecor mood={compliment.mood}/><div className="relative mx-auto flex min-h-[calc(100vh-40px)] max-w-6xl flex-col"><header className="flex items-center justify-between py-3"><div><p className="text-base font-semibold text-white">Для Вики 💛</p><p className="text-xs text-soft">100 комплиментов только для тебя</p></div><div className="rounded-full border border-white/10 bg-white/8 px-4 py-2 text-sm text-soft backdrop-blur">{visited.length} открыто</div></header><section className="flex flex-1 items-center py-8"><div className="w-full"><ComplimentCard compliment={compliment}/><div className="mx-auto mt-7 max-w-3xl"><div className="h-2 overflow-hidden rounded-full bg-white/10"><motion.div className="h-full rounded-full bg-gradient-to-r from-pink via-violet to-sky shadow-glow" animate={{width:`${progress}%`}} transition={{duration:.45}}/></div><div className="mt-6 grid gap-3 sm:grid-cols-[1fr_auto_auto]"><button onClick={next} className="inline-flex items-center justify-center gap-3 rounded-[1.6rem] bg-gradient-to-r from-pink via-violet to-sky px-7 py-5 text-lg font-semibold text-white shadow-glow transition active:scale-[.98]">{ending?'Начать заново':'Дальше'}<ArrowRight size={22}/></button><button onClick={random} className="inline-flex items-center justify-center gap-2 rounded-[1.6rem] border border-white/12 bg-white/8 px-5 py-5 text-soft backdrop-blur transition hover:bg-white/12 active:scale-[.98]"><Shuffle size={20}/>Случайный</button><button onClick={restart} className="inline-flex items-center justify-center gap-2 rounded-[1.6rem] border border-white/12 bg-white/8 px-5 py-5 text-soft backdrop-blur transition hover:bg-white/12 active:scale-[.98]"><RotateCcw size={20}/>Сначала</button></div></div></div></section><footer className="pb-2 text-center"><motion.p className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/7 px-5 py-3 text-sm text-soft backdrop-blur" animate={{y:[0,-3,0]}} transition={{duration:3,repeat:Infinity}}><Heart size={16} className="text-pink"/>Сделано специально для Вики</motion.p></footer></div></main>}
+
+import { useEffect, useMemo, useState } from 'react'
+
+const compliments = [
+  "Вика, ты самая тёплая мысль в моём дне.",
+  "Принцесса, с тобой даже обычный день становится красивее.",
+  "Котик, у тебя улыбка, из-за которой хочется забыть обо всём плохом.",
+  "Суслик, ты очень милая, даже когда просто молчишь.",
+  "Вика, ты умеешь делать рядом с собой спокойно.",
+  "Ты такая нежная, что хочется беречь тебя от всего лишнего.",
+  "Принцесса, ты не просто красивая — ты особенная.",
+  "Котик, в тебе есть что-то очень домашнее и родное.",
+  "Суслик, ты смешная самым лучшим образом.",
+  "Вика, я люблю, как ты умеешь быть настоящей.",
+  "Ты красивая не только внешне, но и в мелочах.",
+  "Принцесса, у тебя очень приятная энергия.",
+  "Котик, рядом с тобой хочется становиться лучше.",
+  "Суслик, ты моё маленькое хорошее настроение.",
+  "Вика, ты умеешь быть милой даже без усилий.",
+  "Ты такая, про кого хочется заботиться.",
+  "Принцесса, ты выглядишь красиво даже тогда, когда сама этого не замечаешь.",
+  "Котик, твой голос — это отдельный уют.",
+  "Суслик, ты делаешь этот мир чуть мягче.",
+  "Вика, ты очень важная для меня.",
+  "Ты умеешь быть одновременно нежной и сильной.",
+  "Принцесса, в тебе есть свет, который невозможно не заметить.",
+  "Котик, мне нравится твоя улыбка до невозможности.",
+  "Суслик, ты иногда такая забавная, что я просто таю.",
+  "Вика, ты моя самая любимая причина улыбаться.",
+  "Ты красивая так, что хочется смотреть дольше.",
+  "Принцесса, ты достойна самого бережного отношения.",
+  "Котик, ты очень-очень милая.",
+  "Суслик, даже твои странности мне нравятся.",
+  "Вика, ты делаешь обычные моменты особенными.",
+  "Ты умеешь быть такой, рядом с кем спокойно сердцу.",
+  "Принцесса, я горжусь тобой.",
+  "Котик, ты моя нежность.",
+  "Суслик, ты маленькое чудо с характером.",
+  "Вика, у тебя очень красивый взгляд.",
+  "Ты прекрасна даже в простых вещах.",
+  "Принцесса, ты заслуживаешь цветов просто так.",
+  "Котик, я люблю твою милую сторону.",
+  "Суслик, ты моя любимая смешинка.",
+  "Вика, ты умеешь согревать одним сообщением.",
+  "Ты очень красивая, правда.",
+  "Принцесса, с тобой хочется быть внимательнее к жизни.",
+  "Котик, у тебя есть особенный уют.",
+  "Суслик, ты такая родная.",
+  "Вика, мне нравится, как ты существуешь в этом мире.",
+  "Ты умеешь быть невероятно милой.",
+  "Принцесса, ты лучше любого случайного хорошего дня.",
+  "Котик, ты человек, которого хочется обнимать.",
+  "Суслик, ты маленькая радость.",
+  "Вика, ты очень ценная.",
+  "Ты не обязана быть идеальной, чтобы быть любимой.",
+  "Принцесса, ты уже прекрасная.",
+  "Котик, твоя улыбка — мой любимый вид магии.",
+  "Суслик, ты очень смешная и очень любимая.",
+  "Вика, в тебе есть что-то очень светлое.",
+  "Ты делаешь меня счастливее.",
+  "Принцесса, у тебя невероятно красивое сердце.",
+  "Котик, ты умеешь быть самой милой на свете.",
+  "Суслик, я люблю тебя даже когда ты вредничаешь.",
+  "Вика, ты моя хорошая.",
+  "Ты такая красивая, что это нечестно.",
+  "Принцесса, ты заслуживаешь нежности каждый день.",
+  "Котик, ты моё спокойствие.",
+  "Суслик, ты мой маленький антистресс.",
+  "Вика, ты умеешь быть очень трогательной.",
+  "Ты важнее, чем тебе иногда кажется.",
+  "Принцесса, я хочу, чтобы ты чаще улыбалась.",
+  "Котик, у тебя очень милые привычки.",
+  "Суслик, ты чудо, просто с лапками.",
+  "Вика, я люблю твою доброту.",
+  "Ты красивая даже в моменты, когда не стараешься.",
+  "Принцесса, ты делаешь мою жизнь теплее.",
+  "Котик, я бы выбирал тебя снова и снова.",
+  "Суслик, ты моя любимая врединка.",
+  "Вика, рядом с тобой хочется быть нежнее.",
+  "Ты очень умная и очень красивая.",
+  "Принцесса, ты умеешь вдохновлять.",
+  "Котик, ты мой самый милый человек.",
+  "Суслик, у тебя есть талант быть очаровательной.",
+  "Вика, ты не просто часть дня — ты его лучшее место.",
+  "Ты заслуживаешь, чтобы тебя любили спокойно и бережно.",
+  "Принцесса, ты сияешь даже без повода.",
+  "Котик, ты моя любимая мысль перед сном.",
+  "Суслик, ты маленькая причина большого счастья.",
+  "Вика, мне нравится в тебе всё настоящее.",
+  "Ты красивая в деталях.",
+  "Принцесса, ты умеешь быть невероятной.",
+  "Котик, я люблю, когда ты рядом.",
+  "Суслик, ты очень милый хаос.",
+  "Вика, ты моя нежная радость.",
+  "Ты делаешь этот мир менее шумным.",
+  "Принцесса, в тебе столько хорошего.",
+  "Котик, ты заслуживаешь самых тёплых слов.",
+  "Суслик, ты мой любимый человек с милыми странностями.",
+  "Вика, я правда очень тебя ценю.",
+  "Ты красивая, любимая и очень важная.",
+  "Принцесса, пусть каждый день напоминает тебе, какая ты чудесная.",
+  "Котик, ты моё сердце греешь.",
+  "Суслик, ты самая любимая маленькая вселенная.",
+  "Вика, спасибо, что ты есть."
+]
+
+const icons = ['♡', '✦', '❀', '☾', '💛', '✧']
+
+export default function HomePage() {
+  const [index, setIndex] = useState(0)
+  const [opened, setOpened] = useState<number[]>([])
+  const compliment = compliments[index]
+  const progress = ((index + 1) / compliments.length) * 100
+  const animationClass = `anim${index % 5}`
+
+  useEffect(() => {
+    const saved = localStorage.getItem('vika-compliment-index')
+    if (saved) {
+      const value = Number(saved)
+      if (!Number.isNaN(value) && value >= 0 && value < compliments.length) {
+        setIndex(value)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('vika-compliment-index', String(index))
+    setOpened((items) => Array.from(new Set([...items, index])))
+  }, [index])
+
+  const next = () => {
+    setIndex((value) => (value + 1) % compliments.length)
+  }
+
+  const random = () => {
+    let nextIndex = Math.floor(Math.random() * compliments.length)
+    if (nextIndex === index) nextIndex = (nextIndex + 1) % compliments.length
+    setIndex(nextIndex)
+  }
+
+  const restart = () => {
+    setIndex(0)
+    setOpened([])
+    localStorage.removeItem('vika-compliment-index')
+  }
+
+  return (
+    <main className="app">
+      <div className="decor" aria-hidden="true">
+        <span>♡</span>
+        <span>✦</span>
+        <span>❀</span>
+        <span>☾</span>
+        <span>♡</span>
+        <span>✧</span>
+      </div>
+
+      <div className="wrap">
+        <header className="top">
+          <div className="brand">
+            <strong>Для Вики 💛</strong>
+            <span>100 комплиментов только для тебя</span>
+          </div>
+          <div className="counter">{opened.length} открыто</div>
+        </header>
+
+        <section className="center">
+          <div className="content">
+            <article key={index} className={`card ${animationClass}`}>
+              <div className="icon">{icons[index % icons.length]}</div>
+              <p className="kicker">комплимент {index + 1} / {compliments.length}</p>
+              <h1 className="text">{compliment}</h1>
+            </article>
+
+            <div className="progressWrap">
+              <div className="progress">
+                <div className="progressInner" style={{ width: `${progress}%` }} />
+              </div>
+
+              <div className="actions">
+                <button className="btn btnPrimary" onClick={next}>
+                  {index === compliments.length - 1 ? 'Начать заново' : 'Дальше'} →
+                </button>
+                <button className="btn btnGhost" onClick={random}>Случайный</button>
+                <button className="btn btnGhost" onClick={restart}>Сначала</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer className="footer">
+          <span>♡ Сделано специально для Вики</span>
+        </footer>
+      </div>
+    </main>
+  )
+}
