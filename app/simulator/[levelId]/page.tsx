@@ -1,11 +1,24 @@
 import { AppShell } from '@/components/shared/AppShell'
 import { Card } from '@/components/shared/Card'
-import { getLevel } from '@/lib/data/levels'
+import { getLevel, levels } from '@/lib/data/levels'
 import { SimulatorCanvas, TouchControls } from '@/components/simulator/SimulatorCanvas'
 import { SimulatorHud } from '@/components/simulator/SimulatorHud'
 
-export default function SimulatorPage({ params }: { params: { levelId: string } }) {
-  const level = getLevel(params.levelId)
+type SimulatorPageProps = {
+  params: Promise<{
+    levelId: string
+  }>
+}
+
+export function generateStaticParams() {
+  return levels.map((level) => ({
+    levelId: level.id
+  }))
+}
+
+export default async function SimulatorPage({ params }: SimulatorPageProps) {
+  const { levelId } = await params
+  const level = getLevel(levelId)
 
   return (
     <AppShell>
@@ -27,7 +40,9 @@ export default function SimulatorPage({ params }: { params: { levelId: string } 
 
         <Card className="p-4">
           <TouchControls />
-          <div className="hidden text-sm text-soft md:block">Управление: W/↑ — газ, S/↓ — тормоз, A/D — руль, Q — R, E — D, R — сброс.</div>
+          <div className="hidden text-sm text-soft md:block">
+            Управление: W/↑ — газ, S/↓ — тормоз, A/D — руль, Q — R, E — D, R — сброс.
+          </div>
         </Card>
       </div>
     </AppShell>

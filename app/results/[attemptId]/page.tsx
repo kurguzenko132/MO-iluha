@@ -2,11 +2,19 @@ import { AppShell } from '@/components/shared/AppShell'
 import { Button } from '@/components/shared/Button'
 import { Card } from '@/components/shared/Card'
 
-export default function ResultsPage() {
+type ResultsPageProps = {
+  params: Promise<{
+    attemptId: string
+  }>
+}
+
+export default async function ResultsPage({ params }: ResultsPageProps) {
+  const { attemptId } = await params
+
   return (
     <AppShell>
       <Card>
-        <p className="text-sm text-pink">Разбор попытки</p>
+        <p className="text-sm text-pink">Разбор попытки · {attemptId}</p>
         <h1 className="mt-2 text-4xl font-semibold">Вика, получилось хорошо 💛</h1>
         <p className="mt-4 text-6xl font-semibold text-mint">82/100</p>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
