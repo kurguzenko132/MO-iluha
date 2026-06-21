@@ -9,6 +9,10 @@ export type SpriteAssetType =
   | 'bollard'
   | 'cart'
   | 'bench'
+  | 'tree'
+  | 'parking-sign'
+  | 'direction-arrow'
+  | 'puddle'
 
 export type VisualSprite = {
   id: string
@@ -73,7 +77,10 @@ function shopNightScene(id: string): VisualScene {
       { id: 'bench', asset: 'bench', x: 8.3, y: -4.0, width: 1.9, height: 0.85, angle: 0 },
       { id: 'bollard-1', asset: 'bollard', x: 7.7, y: 4.7, width: .45, height: .85 },
       { id: 'bollard-2', asset: 'bollard', x: 7.7, y: 2.7, width: .45, height: .85 },
-      { id: 'bollard-3', asset: 'bollard', x: 7.7, y: .7, width: .45, height: .85 }
+      { id: 'bollard-3', asset: 'bollard', x: 7.7, y: .7, width: .45, height: .85 },
+      { id: 'tree-shop', asset: 'tree', x: 8.6, y: -5.2, width: 1.3, height: 1.3 },
+      { id: 'p-sign-shop', asset: 'parking-sign', x: 7.7, y: 5.5, width: .7, height: 1.1 },
+      { id: 'puddle-shop', asset: 'puddle', x: .2, y: -3.2, width: 2.4, height: 1.2, angle: .15, opacity: .55 }
     ]
   }
 }
@@ -95,7 +102,9 @@ function streetNightScene(id: string): VisualScene {
       { id: 'back-car', asset: 'sedan-dark', x: -4.2, y: 2.1, width: 4.7, height: 2.0, angle: 0 },
       { id: 'bollard-a', asset: 'bollard', x: 8.2, y: 4.4, width: .45, height: .85 },
       { id: 'bollard-b', asset: 'bollard', x: 5.5, y: 4.4, width: .45, height: .85 },
-      { id: 'cone', asset: 'cone', x: 3.8, y: -.5, width: .65, height: .8 }
+      { id: 'cone', asset: 'cone', x: 3.8, y: -.5, width: .65, height: .8 },
+      { id: 'tree-street', asset: 'tree', x: 8.0, y: 4.8, width: 1.4, height: 1.4 },
+      { id: 'puddle-street', asset: 'puddle', x: -1.2, y: -2.1, width: 2.2, height: 1.1, angle: -.25, opacity: .55 }
     ]
   }
 }
@@ -114,7 +123,10 @@ function yardNightScene(id: string): VisualScene {
       { id: 'yard-car-1', asset: 'sedan-white', x: -1.9, y: -2.1, width: 4.7, height: 2.0, angle: 0.08 },
       { id: 'yard-car-2', asset: 'suv-gray', x: 2.4, y: 1.4, width: 4.9, height: 2.2, angle: -0.08 },
       { id: 'cart', asset: 'cart', x: 3.9, y: -2.4, width: 1.4, height: 1.1, angle: 0.1 },
-      { id: 'bench', asset: 'bench', x: -6.5, y: 3.4, width: 1.9, height: .85, angle: .1 }
+      { id: 'bench', asset: 'bench', x: -6.5, y: 3.4, width: 1.9, height: .85, angle: .1 },
+      { id: 'tree-yard-a', asset: 'tree', x: -7.0, y: -3.2, width: 1.4, height: 1.4 },
+      { id: 'tree-yard-b', asset: 'tree', x: 6.7, y: 4.1, width: 1.2, height: 1.2 },
+      { id: 'puddle-yard', asset: 'puddle', x: .4, y: -.9, width: 2.3, height: 1.2, angle: .4, opacity: .5 }
     ]
   }
 }

@@ -7,6 +7,7 @@ import { useSimulatorStore } from '@/store/simulatorStore'
 import { FinishAttemptButton } from '@/components/simulator/FinishAttemptButton'
 import { playSound } from '@/lib/sound/soundEngine'
 import { PremiumLayeredCanvas } from '@/components/simulator/PremiumLayeredCanvas'
+import { InstructorPanel } from '@/components/simulator/InstructorPanel'
 import type { CarInput } from '@/lib/physics/types'
 
 function HoldButton({ children, onHold, onRelease, className = '' }: {
@@ -39,7 +40,7 @@ function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; va
 }
 
 export function PremiumGameplayClient({ level }: { level: ParkingLevel }) {
-  const { score, collisions, maneuvers, car, setGear, setInput, resetCar, setVirtualSteering, comfortMode, setComfortMode } = useSimulatorStore()
+  const { score, collisions, maneuvers, car, setGear, setInput, resetCar, setVirtualSteering, comfortMode, setComfortMode, instructorMode, setInstructorMode } = useSimulatorStore()
   const press = (key: keyof CarInput, value: boolean) => () => setInput({ [key]: value } as Partial<CarInput>)
 
   useEffect(() => {
@@ -79,6 +80,15 @@ export function PremiumGameplayClient({ level }: { level: ParkingLevel }) {
           </div>
           <span>→</span>
           <div className="flex items-center justify-center gap-2"><ChartNoAxesColumnIncreasing /> Разбор</div>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-[1fr_360px]">
+          <InstructorPanel level={level} />
+          <div className="v11-glass-soft rounded-[1.6rem] p-5">
+            <p className="text-sm text-pink">Камера и масштаб</p>
+            <h3 className="mt-1 text-xl font-semibold">Автоматически под устройство</h3>
+            <p className="mt-2 text-sm leading-6 text-soft">Сцена подстраивается под телефон, iPad и ноутбук. Камера мягко следует за машиной.</p>
+          </div>
         </div>
 
         <section className="relative mt-6 h-[900px] overflow-hidden rounded-[2rem] border border-white/10 bg-[#070a12] shadow-card md:h-[940px]">

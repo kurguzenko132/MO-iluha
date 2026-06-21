@@ -10,10 +10,11 @@ import { playSound } from '@/lib/sound/soundEngine'
 import { useSettingsStore } from '@/store/settingsStore'
 import { useSimulatorStore } from '@/store/simulatorStore'
 import { getVisualScene, type VisualScene, type VisualSprite } from '@/lib/data/visualScenes'
+import { getInstructorSteps } from '@/lib/data/instructorSteps'
 import type { ParkingLevel } from '@/lib/data/levels'
 import type { CarInput, Point } from '@/lib/physics/types'
 
-const SCALE = 72
+let activeScale = 72
 
 type AssetMap = Record<string, HTMLImageElement>
 
@@ -27,7 +28,11 @@ const assetSources: Record<string, string> = {
   cart: '/assets/v12/shopping-cart.svg',
   bench: '/assets/v12/bench.svg',
   asphalt: '/assets/v12/asphalt-texture.png',
-  storefront: '/assets/v12/sidewalk-storefront.png'
+  storefront: '/assets/v12/sidewalk-storefront.png',
+  tree: '/assets/v13/tree-top.svg',
+  'parking-sign': '/assets/v13/parking-sign.svg',
+  'direction-arrow': '/assets/v13/direction-arrow.svg',
+  puddle: '/assets/v13/puddle.png'
 }
 
 function loadImage(src: string) {
@@ -41,8 +46,8 @@ function loadImage(src: string) {
 
 function w2s(p: Point, canvasW: number, canvasH: number, camera: Point) {
   return {
-    x: canvasW / 2 + (p.x - camera.x) * SCALE,
-    y: canvasH / 2 - (p.y - camera.y) * SCALE
+    x: canvasW / 2 + (p.x - camera.x) * activeScale,
+    y: canvasH / 2 - (p.y - camera.y) * activeScale
   }
 }
 
@@ -74,8 +79,8 @@ function drawWorldImage(
   ctx.globalAlpha = opacity
   ctx.translate(s.x, s.y)
   ctx.rotate(-angle)
-  const pxW = widthM * SCALE
-  const pxH = heightM * SCALE
+  const pxW = widthM * activeScale
+  const pxH = heightM * activeScale
   if (img && img.complete && img.naturalWidth > 0) {
     ctx.drawImage(img, -pxW / 2, -pxH / 2, pxW, pxH)
   } else {
@@ -132,7 +137,7 @@ function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number, cam
     const pattern = ctx.createPattern(asphalt, 'repeat')
     if (pattern) {
       ctx.save()
-      ctx.translate((-camera.x * SCALE) % 1024, (camera.y * SCALE) % 1024)
+      ctx.translate((-camera.x * activeScale) % 1024, (camera.y * activeScale) % 1024)
       ctx.fillStyle = pattern
       ctx.fillRect(-1024, -1024, w + 2048, h + 2048)
       ctx.restore()
@@ -149,7 +154,7 @@ function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number, cam
   // subtle parking grid lines
   ctx.strokeStyle = 'rgba(255,255,255,.045)'
   ctx.lineWidth = 1
-  const grid = 72
+  const grid = activeScale
   const ox = ((w/2 - camera.x*SCALE) % grid + grid) % grid
   const oy = ((h/2 + camera.y*SCALE) % grid + grid) % grid
   for (let x = ox; x < w; x += grid) {
@@ -164,7 +169,7 @@ function drawShopSidewalk(ctx: CanvasRenderingContext2D, w: number, h: number, c
   const xWorld = 8.35
   const top = w2s({x:xWorld, y:8}, w, h, camera)
   const bottom = w2s({x:xWorld, y:-8}, w, h, camera)
-  const sw = 3.2 * SCALE
+  const sw = 3.2 * activeScale
   const x = top.x
   const y = top.y
   const height = bottom.y - top.y
@@ -185,8 +190,8 @@ function drawShopSidewalk(ctx: CanvasRenderingContext2D, w: number, h: number, c
 
 function drawParkingSlot(ctx: CanvasRenderingContext2D, slot: VisualScene['parkingSlots'][number], w: number, h: number, camera: Point) {
   const s = w2s({x:slot.x, y:slot.y}, w, h, camera)
-  const pxW = slot.width * SCALE
-  const pxH = slot.height * SCALE
+  const pxW = slot.width * activeScale
+  const pxH = slot.height * activeScale
   ctx.save()
   ctx.translate(s.x, s.y)
   ctx.rotate(-(slot.angle || 0))
@@ -251,6 +256,64 @@ function drawCheckpoints(ctx: CanvasRenderingContext2D, level: ParkingLevel, w: 
   })
 }
 
+
+function drawInstructorStep(ctx: CanvasRenderingContext2D, step: ReturnType<typeof getInstructorSteps>[number] | undefined, w: number, h: number, camera: Point) {
+  if (!step) return
+  const s = w2s({ x: step.x, y: step.y }, w, h, camera)
+  const pulse = 1 + Math.sin(Date.now() / 260) * .06
+
+  ctx.save()
+  ctx.globalAlpha = .95
+  ctx.fillStyle = 'rgba(255,94,200,.10)'
+  ctx.strokeStyle = 'rgba(255,94,200,.85)'
+  ctx.lineWidth = 3
+  ctx.shadowColor = 'rgba(255,94,200,.65)'
+  ctx.shadowBlur = 30
+  ctx.beginPath()
+  ctx.arc(s.x, s.y, step.radius * activeScale * pulse, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+
+  ctx.fillStyle = '#FF5EC8'
+  ctx.font = '800 13px system-ui'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText('●', s.x, s.y)
+
+  ctx.fillStyle = 'rgba(8,11,19,.78)'
+  drawRoundedRect(ctx, s.x + 22, s.y - 38, 210, 70, 16)
+  ctx.fill()
+  ctx.strokeStyle = 'rgba(255,255,255,.12)'
+  ctx.stroke()
+
+  ctx.fillStyle = '#fff'
+  ctx.font = '700 13px system-ui'
+  ctx.textAlign = 'left'
+  ctx.fillText(step.title, s.x + 38, s.y - 14)
+  ctx.fillStyle = 'rgba(184,192,217,.92)'
+  ctx.font = '12px system-ui'
+  wrapText(ctx, step.text, s.x + 38, s.y + 7, 170, 17)
+
+  ctx.restore()
+}
+
+function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
+  const words = text.split(' ')
+  let line = ''
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' '
+    const metrics = ctx.measureText(testLine)
+    if (metrics.width > maxWidth && n > 0) {
+      ctx.fillText(line, x, y)
+      line = words[n] + ' '
+      y += lineHeight
+    } else {
+      line = testLine
+    }
+  }
+  ctx.fillText(line, x, y)
+}
+
 function drawRiskDot(ctx: CanvasRenderingContext2D, level: ParkingLevel, predicted: {x:number;y:number;angle:number}[], cfg: any, w: number, h: number, camera: Point) {
   for (let i = 0; i < predicted.length; i += 8) {
     const ghostCar = { x: predicted[i].x, y: predicted[i].y, angle: predicted[i].angle, speed: 0, steeringAngle: 0, gear: 'D' as const }
@@ -275,6 +338,7 @@ export function PremiumLayeredCanvas({ level }: { level: ParkingLevel }) {
   const [finished, setFinished] = useState(false)
   const [assets, setAssets] = useState<AssetMap>({})
   const scene = useMemo(() => getVisualScene(level), [level])
+  const instructorSteps = useMemo(() => getInstructorSteps(level), [level])
   const settings = useSettingsStore()
   const { setCar, setInput, resetCar, setHint, addCollision } = useSimulatorStore()
 
@@ -292,6 +356,7 @@ export function PremiumLayeredCanvas({ level }: { level: ParkingLevel }) {
     setFinished(false)
     savedRef.current = false
     cameraRef.current = { x: level.start.x, y: level.start.y }
+    useSimulatorStore.getState().setInstructorStepIndex(0)
   }, [level.id, level.start, resetCar])
 
   useEffect(() => {
@@ -386,11 +451,34 @@ export function PremiumLayeredCanvas({ level }: { level: ParkingLevel }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
       const state = useSimulatorStore.getState()
+      activeScale = Math.max(48, Math.min(82, Math.min(cssW / 11.6, cssH / 12.6)))
+
+      const lookAhead = {
+        x: state.car.x + Math.cos(state.car.angle) * 0.85,
+        y: state.car.y + Math.sin(state.car.angle) * 0.85
+      }
+
       cameraRef.current = {
-        x: cameraRef.current.x + (state.car.x - cameraRef.current.x) * .055,
-        y: cameraRef.current.y + (state.car.y - cameraRef.current.y) * .055
+        x: cameraRef.current.x + (lookAhead.x - cameraRef.current.x) * .055,
+        y: cameraRef.current.y + (lookAhead.y - cameraRef.current.y) * .055
       }
       const camera = cameraRef.current
+
+      if (state.instructorMode) {
+        const step = instructorSteps[state.instructorStepIndex]
+        if (step) {
+          const dist = Math.hypot(state.car.x - step.x, state.car.y - step.y)
+          if (dist < step.radius && Math.abs(state.car.speed) < 1.6) {
+            useSimulatorStore.getState().setHint(step.text)
+            if (state.instructorStepIndex < instructorSteps.length - 1) {
+              useSimulatorStore.getState().setInstructorStepIndex(state.instructorStepIndex + 1)
+              playSound('soft')
+            }
+          } else {
+            useSimulatorStore.getState().setHint(step.text)
+          }
+        }
+      }
 
       drawBackground(ctx, cssW, cssH, camera, assets, scene)
       if (scene.decor.storefront || scene.decor.sidewalk) drawShopSidewalk(ctx, cssW, cssH, camera, assets)
@@ -437,6 +525,10 @@ export function PremiumLayeredCanvas({ level }: { level: ParkingLevel }) {
         }
       }
 
+      if (state.instructorMode) {
+        drawInstructorStep(ctx, instructorSteps[state.instructorStepIndex], cssW, cssH, camera)
+      }
+
       drawWorldImage(ctx, assets.player, {x: state.car.x, y: state.car.y}, state.config.length, state.config.width, state.car.angle, cssW, cssH, camera, 1)
 
       // soft foreground gradient
@@ -459,7 +551,7 @@ export function PremiumLayeredCanvas({ level }: { level: ParkingLevel }) {
 
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [assets, scene, level, settings, setCar, setHint, addCollision, finished])
+  }, [assets, scene, level, instructorSteps, settings, setCar, setHint, addCollision, finished])
 
   return <canvas ref={canvasRef} className="block h-full w-full" />
 }

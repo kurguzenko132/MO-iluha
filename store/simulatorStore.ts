@@ -14,6 +14,8 @@ type SimulatorState = {
   startedAt: number
   currentHint: string
   comfortMode: boolean
+  instructorMode: boolean
+  instructorStepIndex: number
   setCar: (car: CarState) => void
   setInput: (input: Partial<CarInput>) => void
   setGear: (gear: 'D' | 'R') => void
@@ -23,6 +25,9 @@ type SimulatorState = {
   addCollision: () => void
   addManeuver: () => void
   setComfortMode: (value: boolean) => void
+  setInstructorMode: (value: boolean) => void
+  setInstructorStepIndex: (value: number) => void
+  nextInstructorStep: () => void
 }
 
 const defaultCar: CarState = { x: -7, y: 0, angle: 0, speed: 0, steeringAngle: 0, gear: 'D' }
@@ -38,6 +43,8 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
   startedAt: Date.now(),
   currentHint: 'Не спеши. Смотри на синюю траекторию.',
   comfortMode: true,
+  instructorMode: true,
+  instructorStepIndex: 0,
   setCar: (car) => set((s) => ({ car, maxSpeed: Math.max(s.maxSpeed, Math.abs(car.speed)) })),
   setInput: (input) => set((s) => ({ input: { ...s.input, ...input } })),
   setGear: (gear) => set((s) => ({ car: { ...s.car, gear, speed: 0 }, maneuvers: s.maneuvers + 1 })),
@@ -49,10 +56,14 @@ export const useSimulatorStore = create<SimulatorState>((set) => ({
     maneuvers: 0,
     maxSpeed: 0,
     startedAt: Date.now(),
-    currentHint: 'Начнём спокойно. Ошибаться здесь можно.'
+    currentHint: 'Начнём спокойно. Ошибаться здесь можно.',
+    instructorStepIndex: 0
   }),
   setHint: (currentHint) => set({ currentHint }),
   addCollision: () => set((s) => ({ collisions: s.collisions + 1, score: Math.max(0, s.score - 12) })),
   addManeuver: () => set((s) => ({ maneuvers: s.maneuvers + 1 })),
-  setComfortMode: (comfortMode) => set({ comfortMode })
+  setComfortMode: (comfortMode) => set({ comfortMode }),
+  setInstructorMode: (instructorMode) => set({ instructorMode }),
+  setInstructorStepIndex: (instructorStepIndex) => set({ instructorStepIndex }),
+  nextInstructorStep: () => set((s) => ({ instructorStepIndex: s.instructorStepIndex + 1 }))
 }))
