@@ -1,71 +1,39 @@
-import { AppShell } from '@/components/shared/AppShell'
-import { Card } from '@/components/shared/Card'
+import { AuthGuard } from '@/components/auth/AuthGuard'
+import { V11Shell } from '@/components/v11/V11Shell'
 import { levels } from '@/lib/data/levels'
-import { Car, MapPin, Target } from 'lucide-react'
-import { CurriculumMap } from '@/components/practice/CurriculumMap'
+import { Car, ChevronRight } from 'lucide-react'
 
-const categoryNames: Record<string, string> = {
-  basic: 'Габариты и база',
-  shop: 'Парковка у магазина',
-  yard: 'Двор',
-  parallel: 'Параллельная парковка',
-  hard: 'Сложные ситуации'
-}
+const imgs = ['thumb-gabarits.png', 'thumb-reverse-straight.png', 'thumb-shop.png', 'thumb-shop.png', 'thumb-shop.png', 'thumb-parallel.png', 'thumb-yard.png', 'thumb-yard.png']
 
 export default function PracticePage() {
-  const grouped = Object.entries(
-    levels.reduce<Record<string, typeof levels>>((acc, level) => {
-      acc[level.category] = acc[level.category] || []
-      acc[level.category].push(level)
-      return acc
-    }, {})
-  )
-
   return (
-    <AppShell>
-      <div className="space-y-5">
-        <Card>
-          <p className="text-sm text-pink">Практика без стресса</p>
-          <h1 className="mt-2 text-4xl font-semibold">Упражнения, которые реально учат парковаться</h1>
-          <p className="mt-3 max-w-2xl text-soft">
-            Не просто “попади в прямоугольник”, а жизненные ситуации: движение назад, кривые соседние машины, узкий двор, бордюр, выезд из тесного места.
-          </p>
-        </Card>
+    <AuthGuard>
+      <V11Shell>
+        <section className="space-y-6">
+          <div className="v11-glass rounded-[2rem] p-7 v11-pink-glow">
+            <p className="text-xl text-pink">Практика</p>
+            <h1 className="v11-title mt-3 text-5xl">Уровни парковки</h1>
+            <p className="mt-4 text-xl text-soft">От габаритов Octavia до сложных ситуаций во дворе и у магазина.</p>
+          </div>
 
-        <CurriculumMap />
-
-        {grouped.map(([category, items]) => (
-          <section key={category} className="space-y-3">
-            <h2 className="text-2xl font-semibold">{categoryNames[category]}</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {items.map(level => (
-                <a key={level.id} href={`/simulator/${level.id}`} className="glass rounded-3xl p-5 transition hover:scale-[1.01] hover:bg-white/10">
-                  <div className="mb-4 flex items-center justify-between gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10">
-                      <Car className="text-sky" size={20} />
-                    </div>
-                    <span className="rounded-full bg-white/8 px-3 py-1 text-xs text-soft">Сложность {level.difficulty}/5</span>
+          <div className="grid gap-4 md:grid-cols-2">
+            {levels.map((level, index) => (
+              <a key={level.id} href={`/simulator/${level.id}`} className="v11-glass-soft overflow-hidden rounded-[1.6rem] p-5 transition hover:scale-[1.01]">
+                <div className="h-48 rounded-[1.2rem] border border-white/10 bg-cover bg-center" style={{ backgroundImage: `url('/assets/v11/${imgs[index] || 'thumb-shop.png'}')` }} />
+                <div className="mt-5 flex items-start gap-4">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-pink/12 text-pink v11-pink-glow">{index + 1}</span>
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-semibold">{level.title}</h2>
+                    <p className="mt-2 text-soft">{level.skill}</p>
                   </div>
-
-                  <h3 className="text-xl font-semibold">{level.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-soft">{level.intro}</p>
-
-                  <div className="mt-4 grid gap-2 text-sm text-soft">
-                    <div className="flex gap-2 rounded-2xl bg-white/7 px-3 py-2">
-                      <Target size={16} className="mt-0.5 shrink-0 text-mint" />
-                      <span>{level.goal}</span>
-                    </div>
-                    <div className="flex gap-2 rounded-2xl bg-white/7 px-3 py-2">
-                      <MapPin size={16} className="mt-0.5 shrink-0 text-pink" />
-                      <span>Навык: {level.skill}</span>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
-    </AppShell>
+                  <Car className="text-pink" />
+                  <ChevronRight className="text-soft" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      </V11Shell>
+    </AuthGuard>
   )
 }

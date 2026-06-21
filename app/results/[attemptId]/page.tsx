@@ -1,5 +1,6 @@
-import { AppShell } from '@/components/shared/AppShell'
+import { AuthGuard } from '@/components/auth/AuthGuard'
 import { ResultClient } from '@/components/results/ResultClient'
+import { V11Shell } from '@/components/v11/V11Shell'
 
 type ResultsPageProps = {
   params: Promise<{
@@ -11,8 +12,10 @@ export default async function ResultsPage({ params }: ResultsPageProps) {
   await params
 
   return (
-    <AppShell>
-      <ResultClient />
-    </AppShell>
+    <AuthGuard>
+      <V11Shell withNav={false}>
+        <ResultClient />
+      </V11Shell>
+    </AuthGuard>
   )
 }

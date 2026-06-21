@@ -1,46 +1,33 @@
-import { AppShell } from '@/components/shared/AppShell'
-import { Button } from '@/components/shared/Button'
-import { Card } from '@/components/shared/Card'
+import { AuthGuard } from '@/components/auth/AuthGuard'
+import { V11Shell } from '@/components/v11/V11Shell'
 import { lessons } from '@/lib/data/lessons'
-import { BookOpen, Clock, Sparkles } from 'lucide-react'
+import { BookOpen, ChevronRight } from 'lucide-react'
 
 export default function LearnPage() {
   return (
-    <AppShell>
-      <div className="space-y-5">
-        <Card>
-          <p className="text-sm text-pink">Теория без занудства</p>
-          <h1 className="mt-2 text-4xl font-semibold">Понять парковку до практики</h1>
-          <p className="mt-3 max-w-2xl text-soft">
-            Короткие уроки объясняют, почему машина едет именно так: поворот, задний ход, габариты, параллельная парковка. После каждого урока есть упражнение.
-          </p>
-        </Card>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          {lessons.map((lesson, index) => (
-            <Card key={lesson.id} className="flex flex-col">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10">
-                  <BookOpen className="text-sky" size={20} />
+    <AuthGuard>
+      <V11Shell>
+        <section className="space-y-6">
+          <div className="v11-glass rounded-[2rem] p-7 v11-pink-glow">
+            <p className="text-xl text-pink">Теория</p>
+            <h1 className="v11-title mt-3 text-5xl">Короткие уроки парковки</h1>
+            <p className="mt-4 text-xl text-soft">Сначала понять траекторию, потом спокойно закрепить на практике.</p>
+          </div>
+          <div className="grid gap-4">
+            {lessons.map((lesson, index) => (
+              <a key={lesson.id} href={`/learn/${lesson.id}`} className="v11-glass-soft flex items-center gap-5 rounded-[1.6rem] p-5 transition hover:scale-[1.01]">
+                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-pink/12 text-2xl text-pink v11-pink-glow">{index + 1}</span>
+                <div className="flex-1">
+                  <h2 className="text-2xl font-semibold">{lesson.title}</h2>
+                  <p className="mt-2 text-soft">{lesson.subtitle}</p>
                 </div>
-                <span className="rounded-full bg-white/8 px-3 py-1 text-xs text-soft">Урок {index + 1}</span>
-              </div>
-
-              <h2 className="text-xl font-semibold">{lesson.title}</h2>
-              <p className="mt-2 flex-1 text-sm leading-6 text-soft">{lesson.subtitle}</p>
-
-              <div className="mt-5 flex flex-wrap gap-2 text-xs text-soft">
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/8 px-3 py-1"><Clock size={13} /> {lesson.duration}</span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-white/8 px-3 py-1"><Sparkles size={13} /> {lesson.level}</span>
-              </div>
-
-              <div className="mt-5">
-                <Button href={`/learn/${lesson.id}`} className="w-full">Открыть урок</Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </AppShell>
+                <BookOpen className="text-pink" />
+                <ChevronRight className="text-soft" />
+              </a>
+            ))}
+          </div>
+        </section>
+      </V11Shell>
+    </AuthGuard>
   )
 }

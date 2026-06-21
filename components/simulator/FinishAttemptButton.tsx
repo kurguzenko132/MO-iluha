@@ -25,9 +25,7 @@ export function FinishAttemptButton({ level, compact = false }: { level: Parking
   return (
     <button
       onClick={finish}
-      className={compact
-        ? "game-chip flex items-center justify-center gap-2 rounded-2xl px-3 py-3 text-sm font-semibold text-pink active:scale-[.98]"
-        : "w-full rounded-2xl bg-gradient-to-r from-pink to-violet px-4 py-3 text-sm font-semibold shadow-glow active:scale-[.98]"
+      className={compact ? "v11-glass-soft flex items-center justify-center gap-3 rounded-[1.35rem] px-4 py-4 text-lg font-semibold text-pink active:scale-[.98]" : "w-full rounded-2xl bg-gradient-to-r from-pink to-violet px-4 py-3 text-sm font-semibold shadow-glow active:scale-[.98]"
       }
     >
       <span>{compact ? '⚑' : ''}</span>

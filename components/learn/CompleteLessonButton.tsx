@@ -11,9 +11,9 @@ export function CompleteLessonButton({ lessonId, practiceLevelId }: { lessonId: 
   return (
     <button
       onClick={complete}
-      className="w-full rounded-full bg-gradient-to-r from-pink to-violet px-6 py-3 text-sm font-semibold shadow-glow active:scale-[.98]"
+      className="w-full rounded-[1.5rem] bg-gradient-to-r from-pink/90 via-violet/80 to-sky/80 px-6 py-5 text-2xl font-semibold text-white v11-pink-glow active:scale-[.98]"
     >
-      Я поняла, перейти к упражнению
+      Перейти к упражнению →
     </button>
   )
 }
