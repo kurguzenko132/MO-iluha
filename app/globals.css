@@ -157,6 +157,7 @@ button {
   background: rgba(255,255,255,.10);
   box-shadow: 0 0 42px rgba(255,117,183,.28);
   font-size: 42px;
+  color: #FF75B7;
   animation: floatIcon 3s infinite ease-in-out;
 }
 
@@ -279,6 +280,125 @@ button {
 .anim3 { animation-name: flipIn; }
 .anim4 { animation-name: softDrop; }
 
+.envelopeStage {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+
+.envelopeTitle {
+  margin: 0;
+  color: #FF9ACD;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+}
+
+.openedLetter {
+  width: min(520px, 82vw);
+  min-height: 132px;
+  border-radius: 26px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(180deg, #ffffff, #f4f0ff);
+  color: #10111a;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 900;
+  line-height: .95;
+  letter-spacing: -.06em;
+  text-align: center;
+  box-shadow: 0 24px 70px rgba(0,0,0,.34);
+  animation: letterReveal .45s cubic-bezier(.22,1,.36,1);
+}
+
+.envelopeShell {
+  position: relative;
+  width: min(330px, 78vw);
+  height: 230px;
+  cursor: pointer;
+  filter: drop-shadow(0 28px 48px rgba(0,0,0,.45));
+}
+
+.paperPeek {
+  position: absolute;
+  left: 50%;
+  top: 34px;
+  width: min(220px, 56vw);
+  height: 88px;
+  border-radius: 18px 18px 8px 8px;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,.96);
+  color: #10111a;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 850;
+  z-index: 1;
+}
+
+.envelopeLid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 110px;
+  background: linear-gradient(145deg, #ffb8d8, #b99aff);
+  clip-path: polygon(0 0, 50% 92%, 100% 0);
+  transform-origin: top center;
+  transition: transform .55s ease, opacity .25s ease;
+  z-index: 4;
+}
+
+.envelopeShell.open .envelopeLid {
+  transform: rotateX(180deg);
+  opacity: .38;
+}
+
+.envelopePocket {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 150px;
+  border-radius: 0 0 28px 28px;
+  background: linear-gradient(145deg, #f7d6e8, #d7c2ff 55%, #afe8ff);
+  border: 1px solid rgba(255,255,255,.58);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.envelopeFrontLeft,
+.envelopeFrontRight {
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  height: 150px;
+  z-index: 5;
+}
+
+.envelopeFrontLeft {
+  left: 0;
+  background: linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.06));
+  clip-path: polygon(0 0, 100% 55%, 0 100%);
+}
+
+.envelopeFrontRight {
+  right: 0;
+  background: linear-gradient(145deg, rgba(255,255,255,.24), rgba(255,255,255,.04));
+  clip-path: polygon(100% 0, 0 55%, 100% 100%);
+}
+
+.tapHint {
+  color: #BDC4DA;
+  font-size: 15px;
+  margin-top: -4px;
+}
+
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(34px) scale(.94) rotate(-1deg); filter: blur(12px); }
   to { opacity: 1; transform: translateY(0) scale(1) rotate(0); filter: blur(0); }
@@ -329,6 +449,19 @@ button {
   50% { transform: translateY(-34px) rotate(12deg); opacity: .7; }
 }
 
+@keyframes letterReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(.94);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
 @media (max-width: 720px) {
   .app {
     padding: 14px;
@@ -360,7 +493,8 @@ button {
     font-size: 36px;
   }
 
-  .kicker {
+  .kicker,
+  .envelopeTitle {
     letter-spacing: .24em;
     font-size: 11px;
   }
@@ -372,184 +506,10 @@ button {
   .btn {
     width: 100%;
   }
-}
 
-
-.envelopeStage {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  display: grid;
-  justify-items: center;
-  gap: 18px;
-}
-
-.envelopeTitle {
-  margin: 0;
-  color: #FF9ACD;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .34em;
-  text-transform: uppercase;
-}
-
-.openedLetter {
-  width: min(520px, 82vw);
-  min-height: 132px;
-  border-radius: 26px;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  background: linear-gradient(180deg, #ffffff, #f4f0ff);
-  color: #10111a;
-  font-size: clamp(36px, 6vw, 64px);
-  font-weight: 900;
-  line-height: .95;
-  letter-spacing: -.06em;
-  text-align: center;
-  box-shadow: 0 24px 70px rgba(0,0,0,.34);
-  animation: letterReveal .45s cubic-bezier(.22,1,.36,1);
-}
-
-.envelopeScene {
-  position: relative;
-  width: min(330px, 78vw);
-  height: 230px;
-  display: grid;
-  place-items: center;
-}
-
-.envelope {
-  position: relative;
-  width: min(330px, 78vw);
-  height: 210px;
-  cursor: pointer;
-  filter: drop-shadow(0 28px 48px rgba(0,0,0,.45));
-}
-
-.envelopeBack {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 150px;
-  border-radius: 0 0 28px 28px;
-  background: linear-gradient(145deg, #f7d6e8, #d7c2ff 55%, #afe8ff);
-  border: 1px solid rgba(255,255,255,.58);
-  overflow: hidden;
-  z-index: 2;
-}
-
-.envelopeBack::before,
-.envelopeBack::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  width: 50%;
-  height: 100%;
-  background: rgba(255,255,255,.22);
-}
-
-.envelopeBack::before {
-  left: 0;
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
-
-.envelopeBack::after {
-  right: 0;
-  clip-path: polygon(100% 0, 0 50%, 100% 100%);
-}
-
-.flap {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 148px;
-  height: 120px;
-  background: linear-gradient(145deg, #ffb8d8, #b99aff);
-  clip-path: polygon(0 0, 50% 90%, 100% 0);
-  transform-origin: 50% 0%;
-  transition: transform .7s cubic-bezier(.22,1,.36,1), opacity .25s ease;
-  z-index: 4;
-}
-
-.envelope.open .flap {
-  transform: rotateX(180deg);
-  opacity: .35;
-}
-
-.envelopeFront {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 150px;
-  border-radius: 0 0 28px 28px;
-  overflow: hidden;
-  z-index: 5;
-  pointer-events: none;
-}
-
-.envelopeFront::before,
-.envelopeFront::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(145deg, rgba(255,255,255,.34), rgba(255,255,255,.05));
-}
-
-.envelopeFront::before {
-  left: 0;
-  clip-path: polygon(0 0, 100% 55%, 0 100%);
-}
-
-.envelopeFront::after {
-  right: 0;
-  clip-path: polygon(100% 0, 0 55%, 100% 100%);
-}
-
-.closedPaper {
-  position: absolute;
-  left: 50%;
-  bottom: 92px;
-  width: min(240px, 58vw);
-  height: 92px;
-  border-radius: 18px 18px 8px 8px;
-  display: grid;
-  place-items: center;
-  transform: translateX(-50%);
-  background: rgba(255,255,255,.95);
-  color: #10111a;
-  font-size: 24px;
-  font-weight: 850;
-  z-index: 1;
-}
-
-.tapHint {
-  color: #BDC4DA;
-  font-size: 15px;
-  margin-top: -4px;
-}
-
-@keyframes letterReveal {
-  from {
-    opacity: 0;
-    transform: translateY(24px) scale(.94);
-    filter: blur(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-
-@media (max-width: 720px) {
-  .envelopeTitle {
-    letter-spacing: .22em;
-    font-size: 11px;
+  .envelopeShell {
+    width: min(300px, 82vw);
+    height: 214px;
   }
 
   .openedLetter {
@@ -558,18 +518,9 @@ button {
     padding: 22px;
   }
 
-  .envelopeScene {
-    height: 215px;
-  }
-
-  .envelope {
-    width: min(300px, 82vw);
-    height: 198px;
-  }
-
-  .closedPaper {
-    width: min(220px, 60vw);
-    height: 82px;
+  .paperPeek {
+    width: min(200px, 58vw);
+    height: 80px;
     font-size: 22px;
   }
 }

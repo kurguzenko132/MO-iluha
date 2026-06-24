@@ -7,9 +7,8 @@ const compliments = [
   "Илья, у тебя вайб человека, который может зайти в комнату и сразу стать главным мемом вечера.",
   "Илья, ты редкий экземпляр: вроде обычный человек, а настроение поднимаешь как отдельный праздник.",
   "Илья, с тобой даже самая тупая идея почему-то начинает казаться гениальной.",
-  "secret-envelope"
+  "envelope"
 ]
-
 const icons = ['😎', '✨', '🫡', '🔥', '✉️']
 
 export default function HomePage() {
@@ -67,7 +66,7 @@ export default function HomePage() {
       <div className="wrap">
         <header className="top">
           <div className="brand">
-            <strong>5 комплиментов для Ильи</strong>
+            <strong>Для Ильи</strong>
             <span>маленькое промо с финальным сюрпризом</span>
           </div>
           <div className="counter">{opened.length} открыто</div>
@@ -78,31 +77,30 @@ export default function HomePage() {
             <article key={index} className={`card ${animationClass}`}>
               {isEnvelope ? (
                 <div className="envelopeStage">
-                  <p className="envelopeTitle">последний комплимент / 5</p>
+                  <p className="envelopeTitle">последний сюрприз / 5</p>
 
                   {envelopeOpen && (
                     <div className="openedLetter">иди нахуй</div>
                   )}
 
-                  <div className="envelopeScene">
-                    <div
-                      className={`envelope ${envelopeOpen ? 'open' : ''}`}
-                      onClick={() => setEnvelopeOpen(true)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') setEnvelopeOpen(true)
-                      }}
-                    >
-                      {!envelopeOpen && <div className="closedPaper">Открой</div>}
-                      <div className="envelopeBack" />
-                      <div className="flap" />
-                      <div className="envelopeFront" />
-                    </div>
+                  <div
+                    className={`envelopeShell ${envelopeOpen ? 'open' : ''}`}
+                    onClick={() => setEnvelopeOpen(true)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') setEnvelopeOpen(true)
+                    }}
+                  >
+                    {!envelopeOpen && <div className="paperPeek">Открой</div>}
+                    <div className="envelopeLid" />
+                    <div className="envelopePocket" />
+                    <div className="envelopeFrontLeft" />
+                    <div className="envelopeFrontRight" />
                   </div>
 
                   <div className="tapHint">
-                    {envelopeOpen ? 'теперь ничего не перекрывается' : 'нажми на конверт'}
+                    {envelopeOpen ? 'вот теперь всё на месте' : 'нажми на конверт'}
                   </div>
                 </div>
               ) : (
