@@ -78,7 +78,12 @@ export default function HomePage() {
             <article key={index} className={`card ${animationClass}`}>
               {isEnvelope ? (
                 <div className="envelopeStage">
-                  <p className="kicker">последний комплимент / 5</p>
+                  <p className="envelopeTitle">последний комплимент / 5</p>
+
+                  {envelopeOpen && (
+                    <div className="openedLetter">иди нахуй</div>
+                  )}
+
                   <div className="envelopeScene">
                     <div
                       className={`envelope ${envelopeOpen ? 'open' : ''}`}
@@ -89,14 +94,15 @@ export default function HomePage() {
                         if (event.key === 'Enter' || event.key === ' ') setEnvelopeOpen(true)
                       }}
                     >
-                      <div className="letter">{envelopeOpen ? 'иди нахуй' : 'Открой'}</div>
+                      {!envelopeOpen && <div className="closedPaper">Открой</div>}
                       <div className="envelopeBack" />
                       <div className="flap" />
                       <div className="envelopeFront" />
                     </div>
                   </div>
+
                   <div className="tapHint">
-                    {envelopeOpen ? 'ну вот, теперь видно нормально' : 'нажми на конверт'}
+                    {envelopeOpen ? 'теперь ничего не перекрывается' : 'нажми на конверт'}
                   </div>
                 </div>
               ) : (
