@@ -373,3 +373,98 @@ button {
     width: 100%;
   }
 }
+
+
+
+.envelopeStage {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+}
+
+.envelope {
+  position: relative;
+  width: min(360px, 78vw);
+  height: 230px;
+  cursor: pointer;
+  filter: drop-shadow(0 28px 48px rgba(0,0,0,.45));
+  transform-style: preserve-3d;
+}
+
+.envelopeBody {
+  position: absolute;
+  inset: 62px 0 0;
+  border-radius: 0 0 28px 28px;
+  background: linear-gradient(145deg, #F7D6E8, #D7C2FF 55%, #AFE8FF);
+  border: 1px solid rgba(255,255,255,.58);
+  overflow: hidden;
+}
+
+.envelopeBody::before,
+.envelopeBody::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+  background: rgba(255,255,255,.22);
+}
+
+.envelopeBody::before {
+  left: 0;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.envelopeBody::after {
+  right: 0;
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+
+.flap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 62px;
+  height: 120px;
+  background: linear-gradient(145deg, #FFB8D8, #B99AFF);
+  clip-path: polygon(0 0, 50% 88%, 100% 0);
+  transform-origin: top center;
+  transition: transform .75s cubic-bezier(.22,1,.36,1);
+  z-index: 4;
+}
+
+.letter {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  top: 72px;
+  min-height: 132px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #fff;
+  color: #111;
+  font-size: clamp(32px, 7vw, 58px);
+  font-weight: 850;
+  letter-spacing: -.05em;
+  transform: translateY(28px);
+  transition: transform .75s cubic-bezier(.22,1,.36,1);
+  z-index: 2;
+  text-align: center;
+}
+
+.envelope.open .flap {
+  transform: rotateX(180deg);
+}
+
+.envelope.open .letter {
+  transform: translateY(-96px);
+}
+
+.tapHint {
+  color: #BDC4DA;
+  font-size: 15px;
+}

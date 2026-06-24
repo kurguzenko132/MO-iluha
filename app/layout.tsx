@@ -2,17 +2,17 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Для Вики 💛',
-  description: 'Маленькая личная страница, сделанная специально для тебя.',
+  title: '5 комплиментов для Ильи',
+  description: 'Небольшая страница с сюрпризом для Ильи.',
   openGraph: {
-    title: 'Для Вики 💛',
-    description: 'Маленькая личная страница, сделанная специально для тебя.',
+    title: '5 комплиментов для Ильи',
+    description: 'Небольшая страница с сюрпризом для Ильи.',
     type: 'website'
   },
   twitter: {
     card: 'summary',
-    title: 'Для Вики 💛',
-    description: 'Маленькая личная страница, сделанная специально для тебя.'
+    title: '5 комплиментов для Ильи',
+    description: 'Небольшая страница с сюрпризом для Ильи.'
   },
   robots: {
     index: false,
